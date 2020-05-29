@@ -4,7 +4,9 @@ import axios from 'axios';
 
 class Covid extends React.Component {
     state = {
-        data: {}
+        data: {},
+        loading: true,
+        error: false
     }
 
     componentDidMount() {
@@ -15,34 +17,46 @@ class Covid extends React.Component {
                 fetchedData[key] = fetchedData[key].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
             this.setState({
-                data: fetchedData
+                data: fetchedData,
+                loading: false
             })
         }).catch(err => {
-            console.error(err)
+            this.setState({
+                error: true
+            })
         })
     }
 
     render() {
         return (
             <div>
-                <div className="card">
-                    <h2>New Confirmed: {this.state.data.NewConfirmed}</h2>
-                </div>
-                <div className="card">
-                    <h2>Total Confirmed: {this.state.data.TotalConfirmed}</h2>
-                </div>
-                <div className="card">
-                    <h2>New Deaths: {this.state.data.NewDeaths}</h2>
-                </div>
-                <div className="card">
-                    <h2>Total Deaths: {this.state.data.TotalDeaths}</h2>
-                </div>
-                <div className="card">
-                    <h2>New Recovered: {this.state.data.NewRecovered}</h2>
-                </div>
-                <div className="card">
-                    <h2>Total Recovered: {this.state.data.TotalRecovered}</h2>
-                </div>
+                {
+                    this.state.error === true
+                        ? <h3 className="error">Error Occurred!</h3>
+                        : this.state.loading === true
+                            ? <h3 className="loading">Loading ...</h3>
+                            : <div className="stats">
+                                <div className="card">
+                                    <h2>New Confirmed: {this.state.data.NewConfirmed}</h2>
+                                </div>
+                                <div className="card">
+                                    <h2>Total Confirmed: {this.state.data.TotalConfirmed}</h2>
+                                </div>
+                                <div className="card">
+                                    <h2>New Deaths: {this.state.data.NewDeaths}</h2>
+                                </div>
+                                <div className="card">
+                                    <h2>Total Deaths: {this.state.data.TotalDeaths}</h2>
+                                </div>
+                                <div className="card">
+                                    <h2>New Recovered: {this.state.data.NewRecovered}</h2>
+                                </div>
+                                <div className="card">
+                                    <h2>Total Recovered: {this.state.data.TotalRecovered}</h2>
+                                </div>
+                            </div>
+
+                }
             </div>
         )
     }
